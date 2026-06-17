@@ -1,118 +1,140 @@
-# PixelProbe
+<div align="center">
 
-Встав посилання на будь-який сайт → PixelProbe відкриває його у справжньому
-headless-браузері, прокручує, робить **2–3 скріншоти** і — головне —
-**витягує справжні computed-стилі прямо з DOM** (точні hex-кольори, шрифти,
-CSS-змінні, відступи, радіуси, тіні, стилі кнопок). Ці реальні дані разом зі
-скріншотами йдуть у AI, яка повертає design-токени **+ великий промт A→Z** для
-відтворення дизайну.
+# 🎨 PixelProbe
 
-Працює з будь-яким **OpenAI-сумісним** API (Groq · OpenRouter · OpenAI · …) або
-з Google Gemini. Найпростіший **безкоштовний** варіант без білінгу — **Groq**.
+**Paste any URL → get back real design tokens + an A→Z recreation prompt.**
 
-## ✨ Головне
-- **Точність із DOM, а не «на око».** Кольори/шрифти беруться з реальних
-  computed-стилів сторінки — модель їх лише організовує за ролями, а не вгадує.
-- **Великий промт A→Z.** Повна Markdown-специфікація дизайну (бренд, кольори,
-  типографіка, відступи, компоненти, голос, доступність + готовий «recreation
-  prompt»). Можна **скопіювати** або **завантажити** як `Shopify.md`.
-- **Одна папка, одна команда.** Сайт і бекенд на одному порту — без двох терміналів.
-- Сучасний UI (React 19 + Tailwind v4), не дефолтні шрифти, світла/темна тема.
-- Сторінки: Home, Showcase, Components, Pricing, Changelog.
-- **Працює навіть без ключа** — повертає позначений демо-результат (не падає).
+PixelProbe opens a site in a real headless browser, scrolls it, takes **2–3 screenshots**, and — most importantly — **extracts the actual computed styles straight from the DOM** (exact hex colors, fonts, CSS variables, spacing, radii, shadows, button styles). These real values, together with the screenshots, are sent to an AI that returns clean **design tokens + a large A→Z prompt** for recreating the design.
 
-## 🚀 Запуск
+Works with any **OpenAI-compatible** API (Groq · OpenRouter · OpenAI · …) or Google Gemini. The simplest **free, no-billing** option is **Groq**.
 
-Потрібен **Node.js 18+** (https://nodejs.org, версія LTS).
+<sub>React 19 · Tailwind v4 · TypeScript · Playwright · Express</sub>
+
+</div>
+
+---
+
+## ✨ Highlights
+
+- **Accuracy from the DOM, not guesswork.** Colors and fonts are pulled from the page's real computed styles — the model only organizes them by role, it doesn't invent them.
+- **A big A→Z prompt.** A full Markdown design spec (brand, colors, typography, spacing, components, voice, accessibility + a ready-to-paste *recreation prompt*). You can **copy** it or **download** it as `Shopify.md`.
+- **One folder, one command.** Frontend and backend run on a single port — no two terminals.
+- **Modern UI** — React 19 + Tailwind v4, non-default fonts, light/dark theme.
+- **Pages:** Home, Showcase, Components, Pricing, Changelog.
+- **Works even without a key** — returns a clearly labeled demo result instead of crashing.
+
+---
+
+## 🚀 Quick start
+
+Requires **Node.js 18+** ([nodejs.org](https://nodejs.org), LTS version).
 
 ```bash
-# 1. встанови залежності (також автоматично завантажить headless-браузер)
+# 1. install dependencies (also auto-downloads the headless browser)
 npm install
 
-# 2. (опціонально) додай ключ AI для реального аналізу
+# 2. (optional) add an AI key for real analysis
 cp .env.example .env        # Windows: copy .env.example .env
-#   → впиши AI_API_KEY. Безкоштовний ключ Groq: https://console.groq.com/keys
+#   → set AI_API_KEY. Free Groq key: https://console.groq.com/keys
 
-# 3. запусти — сайт + API однією командою, один термінал
+# 3. run — site + API in one command, one terminal
 npm run dev
 ```
 
-Відкрий **http://localhost:5173**, встав URL сайту і натисни «Run scan».
+Open **http://localhost:5173**, paste a site URL, and hit **“Run scan”**.
 
-> Без ключа усе працює, але в демо-режимі (показує приклад токенів).
+> Without a key everything still works, just in demo mode (shows example tokens).
 
-### 🔑 Який ключ узяти (безкоштовно, без картки)
-1. **Groq** (рекомендовано) — https://console.groq.com/keys → `Create API Key`.
-   У `.env` лиши дефолтні `AI_BASE_URL` / `AI_MODEL` і встав `AI_API_KEY=gsk_...`.
-2. **OpenRouter** — https://openrouter.ai/keys, постав:
-   ```
+### 🔑 Which key to grab (free, no card)
+
+1. **Groq** (recommended) — [console.groq.com/keys](https://console.groq.com/keys) → `Create API Key`.
+   In `.env`, keep the default `AI_BASE_URL` / `AI_MODEL` and set `AI_API_KEY=gsk_...`.
+2. **OpenRouter** — [openrouter.ai/keys](https://openrouter.ai/keys), then set:
+   ```env
    AI_BASE_URL=https://openrouter.ai/api/v1
    AI_MODEL=meta-llama/llama-3.2-11b-vision-instruct:free
    ```
-3. **Gemini** — якщо `AI_API_KEY` порожній, використається `GEMINI_API_KEY`.
+3. **Gemini** — if `AI_API_KEY` is empty, `GEMINI_API_KEY` is used instead.
 
-> Якщо провайдер віддає `429 / quota` — це ліміт твого ключа, не баг. Зачекай
-> хвилину, зміни `AI_MODEL` або візьми ключ Groq (там немає білінгу).
+> If the provider returns `429 / quota`, that's your key's rate limit, not a bug. Wait a minute, switch `AI_MODEL`, or grab a Groq key (no billing there).
 
-## 📦 Прод-збірка
+---
+
+## 📦 Production build
 
 ```bash
-npm run build      # збирає сайт у /dist
-npm start          # запускає сайт + API з /dist
+npm run build      # builds the site into /dist
+npm start          # serves the site + API from /dist
 ```
 
-## ⚙️ Змінні оточення (`.env`)
+---
 
-| Змінна | Опис |
+## ⚙️ Environment variables (`.env`)
+
+| Variable | Description |
 | --- | --- |
-| `AI_API_KEY` | Ключ OpenAI-сумісного API (Groq/OpenRouter/OpenAI). Головний варіант. |
-| `AI_BASE_URL` | Базовий URL провайдера. За замовч. Groq. |
-| `AI_MODEL` | Vision-модель. За замовч. `meta-llama/llama-4-scout-17b-16e-instruct` (Groq). |
-| `GEMINI_API_KEY` | Альтернатива — Gemini. Використається лише якщо `AI_API_KEY` порожній. |
-| `GEMINI_MODEL` | Модель Gemini. За замовч. `gemini-2.0-flash`. |
-| `PORT` | Порт сайту + API. За замовч. `5173`. |
-| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | (Опц.) Вмикає акаунти + кредити. Порожні → «open mode» без логіну. |
-| `SUPABASE_SERVICE_ROLE_KEY` | (Опц., СЕКРЕТ) Серверний ключ — безпечно списує кредити. Ніколи не в браузер. |
-| `SIGNUP_CREDITS` / `SCAN_COST` / `FREE_ANON_SCANS` | Економіка кредитів (25 / 5 / 1 за замовч.). |
-| `AUTH_COOKIE_SECRET` | Секрет для підпису cookie безкоштовного скану. |
+| `AI_API_KEY` | Key for an OpenAI-compatible API (Groq/OpenRouter/OpenAI). The primary option. |
+| `AI_BASE_URL` | Provider base URL. Defaults to Groq. |
+| `AI_MODEL` | Vision model. Defaults to `meta-llama/llama-4-scout-17b-16e-instruct` (Groq). |
+| `GEMINI_API_KEY` | Alternative — Gemini. Used only if `AI_API_KEY` is empty. |
+| `GEMINI_MODEL` | Gemini model. Defaults to `gemini-2.0-flash`. |
+| `PORT` | Port for site + API. Defaults to `5173`. |
+| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | (Optional) Enables accounts + credits. Empty → “open mode”, no login. |
+| `SUPABASE_SERVICE_ROLE_KEY` | (Optional, SECRET) Server-side key — safely deducts credits. Never expose to the browser. |
+| `SIGNUP_CREDITS` / `SCAN_COST` / `FREE_ANON_SCANS` | Credit economy (25 / 5 / 1 by default). |
+| `AUTH_COOKIE_SECRET` | Secret for signing the free-scan cookie. |
 
-## 👤 Акаунти + кредити (опціонально)
+---
 
-За замовчуванням — **open mode**: без логіну, безліч сканів. Щоб увімкнути
-вхід (email + Google) і кредити, підключи безкоштовний проєкт **Supabase**:
-покрокова інструкція у **[`SUPABASE_SETUP.md`](./SUPABASE_SETUP.md)**.
-Модель: 1 безкоштовний скан анонімно → реєстрація дає 25 кредитів (5 за скан).
-Кредити списуються **тільки на сервері** через захищену RPC-функцію — з браузера
-їх змінити неможливо (RLS, без write-політик).
+## 👤 Accounts + credits (optional)
 
-## 🗂 Структура
+By default PixelProbe runs in **open mode**: no login, unlimited scans. To enable
+sign-in (email + Google) and credits, connect a free **Supabase** project —
+step-by-step guide in **[`SUPABASE_SETUP.md`](./SUPABASE_SETUP.md)**.
+
+Model: 1 free anonymous scan → sign up for 25 credits (5 per scan). Credits are
+deducted **server-side only** via a protected RPC function — they can't be
+changed from the browser (RLS, no write policies).
+
+---
+
+## 🗂 Structure
 
 ```
 pixelprobe/
-├── server.ts              # єдина точка входу: Express + Vite (сайт + API разом)
+├── server.ts              # single entry point: Express + Vite (site + API together)
 ├── index.html
 ├── vite.config.ts
 ├── package.json
 ├── .env.example
 └── src/
-    ├── main.tsx           # старт фронтенду
-    ├── App.tsx            # роутер (Home / Showcase / Components / Pricing / Changelog)
+    ├── main.tsx           # frontend bootstrap
+    ├── App.tsx            # router (Home / Showcase / Components / Pricing / Changelog)
     ├── components/        # ui/ · layout/ · scan/
-    ├── pages/             # сторінки
+    ├── pages/             # pages
     ├── hooks/             # useScan, useTheme
-    ├── data/              # контент сторінок
-    ├── lib/               # api, типи, утиліти
+    ├── data/              # page content
+    ├── lib/               # api, types, utils
     ├── icons/  · styles/
-    └── server/            # бекенд
-        ├── config.ts              # вибір провайдера (OpenAI-сумісний / Gemini)
+    └── server/            # backend
+        ├── config.ts              # provider selection (OpenAI-compatible / Gemini)
         ├── types.ts
         ├── routes/scan.ts         # POST /api/scan
         └── services/
-            ├── capture.ts         # Playwright: скріншоти + реальні DOM-стилі
-            └── analyze.ts         # AI: токени + промт A→Z
+            ├── capture.ts         # Playwright: screenshots + real DOM styles
+            └── analyze.ts         # AI: tokens + A→Z prompt
 ```
 
+---
+
 ## 🔌 API
+
 - `GET /api/health` → `{ ok, ai, provider, model }`
-- `POST /api/scan` `{ "url": "stripe.com" }` → JSON з токенами (`colors`, `fonts`,
+- `POST /api/scan` `{ "url": "stripe.com" }` → JSON with tokens (`colors`, `fonts`,
   `spacing`, `radii`, `shadows`, `components`, `cssVariables`).
+
+---
+
+## 📄 License
+
+Released under the **MIT License** — see [`LICENSE.md`](./LICENSE.md).
