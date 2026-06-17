@@ -1,0 +1,44 @@
+{
+  "name": "pixelprobe",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PixelProbe — paste a URL and extract its colors, spacing, typography and component patterns into ready-to-use design tokens. One folder, one command.",
+  "scripts": {
+    "dev": "tsx watch server.ts",
+    "build": "vite build",
+    "start": "tsx server.ts --prod",
+    "preview": "vite preview",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "@google/generative-ai": "0.21.0",
+    "@supabase/supabase-js": "^2.108.2",
+    "clsx": "2.1.1",
+    "dotenv": "16.4.7",
+    "express": "4.21.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "lucide-react": "^1.20.0",
+    "openai": "6.42.0",
+    "playwright": "1.49.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "react-markdown": "10.1.0",
+    "react-router-dom": "7.9.1",
+    "remark-gfm": "4.0.1",
+    "tailwind-merge": "3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.1.17",
+    "@types/express": "4.17.21",
+    "@types/node": "22.19.17",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.1",
+    "tailwindcss": "4.1.17",
+    "tsx": "4.19.2",
+    "typescript": "5.9.3",
+    "vite": "7.3.2"
+  }
+}

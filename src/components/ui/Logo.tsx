@@ -1,0 +1,75 @@
+import { cn } from "@/lib/cn";
+
+export function LogoMark({ size = 34, className }: Readonly<{ size?: number; className?: string }>) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 76 76" fill="none" className={className}>
+      <path d="M12 24V12H24" stroke="url(#paint0_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M52 12H64V24" stroke="url(#paint1_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M64 52V64H52" stroke="url(#paint2_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M24 64H12V52" stroke="url(#paint3_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M38 12V16" stroke="url(#paint4_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M38 60V64" stroke="url(#paint5_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M12 38H16" stroke="url(#paint6_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M60 38H64" stroke="url(#paint7_linear_1_269)" strokeWidth="3" strokeLinecap="square" />
+      <path d="M20 20L56 56" stroke="url(#paint8_linear_1_269)" strokeWidth="3" strokeLinecap="round" />
+      <path
+        d="M43 32H33C32.4477 32 32 32.4477 32 33V43C32 43.5523 32.4477 44 33 44H43C43.5523 44 44 43.5523 44 43V33C44 32.4477 43.5523 32 43 32Z"
+        fill="url(#paint9_linear_1_269)"
+      />
+      <defs>
+        <linearGradient id="paint0_linear_1_269" x1="14" y1="14" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint1_linear_1_269" x1="14" y1="14" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint2_linear_1_269" x1="14" y1="14" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint3_linear_1_269" x1="14" y1="14" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint4_linear_1_269" x1="26" y1="14" x2="64.4" y2="33.2" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint5_linear_1_269" x1="26" y1="14" x2="64.4" y2="33.2" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint6_linear_1_269" x1="14" y1="26" x2="33.2" y2="64.4" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint7_linear_1_269" x1="14" y1="26" x2="33.2" y2="64.4" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+        <linearGradient id="paint8_linear_1_269" x1="18" y1="18" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#A855F7" stopOpacity="0.9" />
+          <stop offset="1" stopColor="#A855F7" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="paint9_linear_1_269" x1="14" y1="14" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#818CF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+export function Logo({ className }: Readonly<{ className?: string }>) {
+  return (
+    <div className={cn("flex items-center gap-2.5", className)}>
+      <LogoMark className="flex-shrink-0" />
+      <span className="bg-gradient-to-br from-ink to-accent-2 bg-clip-text font-display text-[17px] font-bold tracking-tight text-transparent">
+        PixelProbe
+      </span>
+    </div>
+  );
+}

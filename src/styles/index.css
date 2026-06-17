@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "./effects.css";
+
+/* ────────────────────────────────────────────────────────────
+   Design tokens — the single source of truth for the whole UI.
+   Exposed to Tailwind v4 via @theme, so utilities like
+   `text-accent`, `font-display`, `bg-surface` are generated.
+   ──────────────────────────────────────────────────────────── */
+@theme {
+  /* Typography — deliberately NOT Inter. */
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Core palette */
+  --color-bg: #080a12;
+  --color-bg-soft: #0b0e1a;
+  --color-surface: rgba(255, 255, 255, 0.035);
+  --color-surface-strong: rgba(255, 255, 255, 0.06);
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-soft: rgba(255, 255, 255, 0.055);
+
+  /* Text */
+  --color-ink: #e8ecf6;
+  --color-ink-soft: rgba(186, 197, 255, 0.6);
+  --color-ink-dim: rgba(186, 197, 255, 0.42);
+  --color-ink-faint: rgba(186, 197, 255, 0.3);
+
+  /* Brand accents */
+  --color-accent: #818cf8;
+  --color-accent-2: #a78bfa;
+  --color-accent-3: #e879f9;
+  --color-indigo: #6366f1;
+  --color-violet: #8b5cf6;
+  --color-amber: #fbbf24;
+  --color-rose: #fb7185;
+  --color-emerald: #34d399;
+
+  /* Radii */
+  --radius-xs: 7px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+}
+
+/* Base element styles live in @layer base so Tailwind utility classes
+   (px-*, pt-*, mx-auto, …) always win over them. An UNLAYERED reset would
+   override every utility because unlayered CSS beats layered CSS. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Stop iOS/Android from auto-inflating text in landscape. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-ink);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Typographic craft: real kerning, ligatures & contextual alternates,
+       optical sizing, a touch of negative tracking, and prettier line breaks
+       so paragraphs never leave a lonely word on the last line. */
+    font-optical-sizing: auto;
+    font-feature-settings: "kern", "liga", "calt";
+    letter-spacing: -0.01em;
+    line-height: 1.55;
+    text-wrap: pretty;
+    /* No grey flash on tap; allow horizontal safe-area on notched phones. */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Headings: the display face, tight optical tracking & leading, and balanced
+     wrapping so multi-line titles split evenly instead of orphaning a word.
+     Tailwind utilities (font-*, tracking-*, leading-*) still win over these. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  /* Monospace = data. Lock figures to a fixed width so numbers (credits,
+     counts, hex codes) never shift, and slash the zero. */
+  .font-mono {
+    font-feature-settings: "kern", "tnum", "zero";
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Remove the 300ms tap delay and double-tap zoom on controls. */
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  /* Media should never blow past its column on small screens. */
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  /* ─── Light theme overrides (dark stays the primary design) ─── */
+  :root[data-theme="light"] {
+    --color-bg: #f7f8fc;
+    --color-bg-soft: #eef0f8;
+    --color-surface: rgba(15, 18, 40, 0.025);
+    --color-surface-strong: rgba(15, 18, 40, 0.05);
+    --color-line: rgba(15, 18, 40, 0.1);
+    --color-line-soft: rgba(15, 18, 40, 0.07);
+    --color-ink: #14182b;
+    --color-ink-soft: rgba(40, 46, 80, 0.72);
+    --color-ink-dim: rgba(40, 46, 80, 0.55);
+    --color-ink-faint: rgba(40, 46, 80, 0.4);
+  }
+  :root[data-theme="light"] .noise {
+    opacity: 0.015;
+  }
+
+  ::selection {
+    background: rgba(129, 140, 248, 0.3);
+    color: #fff;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.28);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.45);
+  }
+}
+
+/* Reusable text gradient helper — slowly drifts for a subtle living sheen. */
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-accent) 0%, var(--color-accent-2) 50%, var(--color-accent-3) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradientShift 11s ease-in-out infinite;
+}

@@ -1,0 +1,75 @@
+name: Deploy to GitHub Pages
+
+# Builds the Vite frontend and publishes it to GitHub Pages on every push to
+# master. NOTE: Pages only serves static files, so the Express /api routes
+# (scan, prompt credit-spending, Supabase admin) do NOT run here — the live
+# site is the frontend only. Run the full app with `npm start` on a real host.
+
+on:
+  push:
+    branches: [master]
+  # Allow manually re-running the deploy from the Actions tab.
+  workflow_dispatch:
+
+# Grant the GITHUB_TOKEN the permissions the Pages deploy needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deploy at a time; don't cancel an in-progress release.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Skip the heavy Chromium download from `postinstall` — not needed for a
+      # static build, and it would otherwise slow every run down a lot.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # Optional: enable the login UI on the static site. Add these as repo
+          # secrets (Settings → Secrets → Actions). Safe to ship — they are the
+          # PUBLIC anon values. Leave unset to run in "open mode" (no login).
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Add SPA fallback + disable Jekyll
+        # React Router needs deep links (e.g. /pixelprobe/showcase) to fall back
+        # to index.html; .nojekyll stops Pages from hiding files like _redirects.
+        run: |
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,226 @@
+/* ────────────────────────────────────────────────────────────
+   Ambient background effects + entrance animations.
+   Kept out of components so the markup stays clean.
+   ──────────────────────────────────────────────────────────── */
+
+/* ─── Floating orbs ─── */
+@keyframes orbFloat1 {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(55px, -90px) scale(1.07); }
+  50% { transform: translate(90px, 30px) scale(0.96); }
+  75% { transform: translate(-30px, 60px) scale(1.04); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes orbFloat2 {
+  0% { transform: translate(0, 0) scale(1); }
+  30% { transform: translate(-80px, 70px) scale(1.06); }
+  60% { transform: translate(50px, -60px) scale(0.94); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes orbFloat3 {
+  0% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(50px, 80px) scale(1.08); }
+  70% { transform: translate(-40px, 20px) scale(0.97); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-1 {
+  width: 780px;
+  height: 780px;
+  top: -220px;
+  left: -180px;
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  filter: blur(95px);
+  animation: orbFloat1 16s ease-in-out infinite;
+}
+.orb-2 {
+  width: 700px;
+  height: 700px;
+  top: 25%;
+  right: -200px;
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, transparent 68%);
+  filter: blur(100px);
+  animation: orbFloat2 20s ease-in-out infinite;
+}
+.orb-3 {
+  width: 500px;
+  height: 500px;
+  bottom: -100px;
+  left: 28%;
+  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.08) 0%, transparent 68%);
+  filter: blur(80px);
+  animation: orbFloat3 13s ease-in-out infinite;
+}
+
+/* ─── Grid ─── */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+  background-size: 160px 160px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 40%, transparent 100%);
+}
+
+/* Scan wave over the grid (canvas) — see GridScan.tsx. */
+.grid-scan-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Constellation + noise ─── */
+.constellation {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  /* Fade the starfield slightly toward the bottom so it never fights footer text. */
+  -webkit-mask-image: linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.35) 100%);
+  mask-image: linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.35) 100%);
+}
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ─── Live preview window ───
+   The scan line that glides up and down over the captured screenshot, plus a
+   wireframe skeleton shown behind it until the real shot loads. */
+.preview-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  pointer-events: none;
+  /* The line itself is the brand gradient; a small, tight bloom hugs it. */
+  background: linear-gradient(90deg, transparent 0%, #818cf8 28%, #a855f7 72%, transparent 100%);
+  box-shadow:
+    0 0 6px 0.5px rgba(129, 140, 248, 0.65),
+    0 0 12px 1px rgba(167, 139, 250, 0.4);
+  animation: previewScan 2.4s ease-in-out infinite alternate;
+}
+@keyframes previewScan {
+  from { top: 4%; }
+  to { top: 96%; }
+}
+
+/* Wireframe skeleton — faint scrolling grid so the window looks alive before
+   (or instead of) the real screenshot. */
+.preview-skeleton {
+  background-image:
+    linear-gradient(rgba(129, 140, 248, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(129, 140, 248, 0.07) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-color: rgba(130, 120, 200, 0.04);
+  animation: skeletonDrift 6s linear infinite;
+}
+@keyframes skeletonDrift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 36px, 0 36px; }
+}
+
+/* ─── (C) Extra flourishes ─── */
+
+/* Slowly drifting gradient on hero accent text — subtle living colour. */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Pulsing scan-ring around the URL field while a scan is running. */
+@keyframes scanPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(129, 140, 248, 0); border-color: rgba(129, 140, 248, 0.45); }
+  50% { box-shadow: 0 0 22px 0 rgba(129, 140, 248, 0.28); border-color: rgba(167, 139, 250, 0.7); }
+}
+.scanning {
+  animation: scanPulse 3s ease-in-out infinite;
+}
+
+/* A travelling sheen that wipes across an element (used on the progress card). */
+@keyframes sheen {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+.sheen-host { position: relative; overflow: hidden; }
+.sheen-host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(129, 140, 248, 0.12) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: sheen 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─── Entrance animations ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.6s ease both; }
+.fade-up-1 { animation: fadeUp 0.65s 0.05s ease both; }
+.fade-up-2 { animation: fadeUp 0.65s 0.16s ease both; }
+.fade-up-3 { animation: fadeUp 0.65s 0.27s ease both; }
+.fade-up-4 { animation: fadeUp 0.65s 0.38s ease both; }
+.fade-up-5 { animation: fadeUp 0.65s 0.49s ease both; }
+.fade-up-6 { animation: fadeUp 0.65s 0.6s ease both; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(129, 140, 248, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin { animation: spin 0.8s linear infinite; }
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.pulse-glow { animation: pulseGlow 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .shimmer, .pulse-glow, .scanning, .sheen-host::after, .text-gradient { animation: none !important; }
+  .fade-up, .fade-up-1, .fade-up-2, .fade-up-3, .fade-up-4, .fade-up-5, .fade-up-6 {
+    animation: none !important;
+  }
+}
